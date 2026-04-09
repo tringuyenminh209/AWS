@@ -1,0 +1,516 @@
+<mxfile host="65bd71144e">
+    <diagram id="aws2_061" name="AWS2-06-1 SNS">
+        <mxGraphModel dx="756" dy="413" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="AWS2-06-1: Amazon SNS 演習 — プッシュ通知サービス" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=22;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="20" width="1000" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="CloudWatch Alarm&lt;br&gt;(CPU &gt; 閾値)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudwatch;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="450" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="EC2 Instance&lt;br&gt;(監視対象)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ec2;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="250" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="メトリクス送信" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E7157B;strokeWidth=2;" parent="1" source="4" target="3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="SNS Topic&lt;br&gt;(Notifications)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sns;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="600" y="450" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="Alarm発火" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E7157B;strokeWidth=2;" parent="1" source="3" target="6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="Email Subscriber&lt;br&gt;(管理者メール)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.simple_email_service;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1000" y="300" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="SQS Queue&lt;br&gt;(サブスクライバー)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sqs;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1000" y="600" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="Email配信" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E7157B;strokeWidth=2;" parent="1" source="6" target="8" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="メッセージ配信" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E7157B;strokeWidth=2;" parent="1" source="6" target="9" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="&lt;b&gt;演習内容:&lt;/b&gt;&lt;br&gt;① SNS Topic作成&lt;br&gt;② Emailサブスクリプション設定 (確認メール承認)&lt;br&gt;③ CloudWatch AlarmとSNSを連携&lt;br&gt;④ テスト通知送信・メール受信確認" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8ee;strokeColor=#d6b656;align=left;spacingLeft=8;fontSize=10;verticalAlign=top;spacingTop=8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="820" width="500" height="140" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="aws2_062" name="AWS2-06-2 SQS">
+        <mxGraphModel dx="756" dy="413" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="20" value="AWS2-06-2: Amazon SQS 演習 — メッセージキューイング (疎結合)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=22;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="20" width="1200" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="Producer&lt;br&gt;(EC2 / Lambda)&lt;br&gt;メッセージ送信側" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ec2;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="480" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="SQS Queue&lt;br&gt;(Standard Queue)&lt;br&gt;メッセージ保持: 最大4日" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sqs;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="480" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="Consumer&lt;br&gt;(EC2 / Lambda)&lt;br&gt;メッセージ受信側" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ec2;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;VerticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1200" y="480" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="SendMessage" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E7157B;strokeWidth=2;" parent="1" source="21" target="22" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="ReceiveMessage&lt;br&gt;DeleteMessage" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E7157B;strokeWidth=2;" parent="1" source="22" target="23" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="Dead Letter Queue (DLQ)&lt;br&gt;処理失敗メッセージ" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sqs;fillColor=#b85450;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="750" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="maxReceiveCount超過" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;strokeWidth=2;dashed=1;" parent="1" source="22" target="26" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="&lt;b&gt;疎結合 (Decoupling) のメリット:&lt;/b&gt;&lt;br&gt;• ProducerとConsumerが独立して動作&lt;br&gt;• Consumerが停止中でもメッセージを保持&lt;br&gt;• スケールアウトが容易" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8ee;strokeColor=#d6b656;align=left;spacingLeft=8;fontSize=10;verticalAlign=top;spacingTop=8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="820" width="500" height="120" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="aws2_063" name="AWS2-06-3 CloudWatch">
+        <mxGraphModel dx="756" dy="413" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="40" value="AWS2-06-3: Amazon CloudWatch 演習 — 監視・アラーム・ダッシュボード" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=22;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="20" width="1300" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="EC2 Instance" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ec2;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="120" y="450" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="Amazon CloudWatch" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudwatch;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="500" y="450" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="CPUUtilization&lt;br&gt;NetworkIn/Out&lt;br&gt;メトリクス" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E7157B;strokeWidth=2;" parent="1" source="41" target="42" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="CloudWatch Dashboard&lt;br&gt;(グラフ可視化)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="250" width="200" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" value="CloudWatch Alarm&lt;br&gt;(CPU &gt; 60% / 1分)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="480" y="700" width="200" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="SNS Topic&lt;br&gt;→ Email通知" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sns;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="900" y="700" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E7157B;strokeWidth=1;dashed=1;" parent="1" source="42" target="44" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="Alarm発火" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;strokeWidth=2;" parent="1" source="42" target="45" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="通知" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;strokeWidth=2;" parent="1" source="45" target="46" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value="&lt;b&gt;演習内容:&lt;/b&gt;&lt;br&gt;① Dashboard作成 (CPU・ネットワークグラフ)&lt;br&gt;② Alarm設定 (CPUが60%超えたらSNS発火)&lt;br&gt;③ stress コマンドで意図的に負荷をかけ&lt;br&gt;　　Email通知を確認" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8ee;strokeColor=#d6b656;align=left;spacingLeft=8;fontSize=10;verticalAlign=top;spacingTop=8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="860" width="500" height="130" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="aws2_07" name="AWS2-07 Lambda Serverless">
+        <mxGraphModel dx="756" dy="413" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="1654" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="60" value="AWS2-07: AWS Lambda 演習 07-1〜07-3 — サーバーレス処理 (Python)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=22;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="20" width="1600" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" value="S3 Bucket&lt;br&gt;(在庫CSV upload)&lt;br&gt;inventory.csv" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;fillColor=#3F8624;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="600" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" value="Lambda Function&lt;br&gt;(Python 3.x)&lt;br&gt;ACA13" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="600" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="S3 Event Trigger&lt;br&gt;(ObjectCreated)" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#3F8624;strokeWidth=2;" parent="1" source="61" target="62" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="64" value="DynamoDB Table&lt;br&gt;(在庫データ)&lt;br&gt;商品ID, 数量" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.dynamodb;fillColor=#2E73B8;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1200" y="400" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="65" value="S3 Bucket&lt;br&gt;(レポートCSV出力)&lt;br&gt;report.csv" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;fillColor=#3F8624;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1200" y="600" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="SNS Topic&lt;br&gt;(在庫切れ通知Email)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sns;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1200" y="800" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="67" value="① DynamoDBからデータ取得" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#2E73B8;strokeWidth=2;" parent="1" source="62" target="64" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="68" value="② CSVレポート書込" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#3F8624;strokeWidth=2;" parent="1" source="62" target="65" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" value="③ 在庫切れ通知" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E7157B;strokeWidth=2;dashed=1;" parent="1" source="62" target="66" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="70" value="IAM Role&lt;br&gt;(LambdaExecutionRole)&lt;br&gt;S3/DynamoDB/SNS権限" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.role;fillColor=#DD344C;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="900" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="71" value="&lt;b&gt;演習07-1〜07-3 内容:&lt;/b&gt;&lt;br&gt;07-1: Lambda基本 — DynamoDBからPythonでデータ取得&lt;br&gt;07-2: Lambda → S3にCSVレポート書き込み&lt;br&gt;07-3 (ACA13): S3 Triggerで自動起動 → DynamoDB更新 → 在庫切れSNS通知" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8ee;strokeColor=#d6b656;align=left;spacingLeft=8;fontSize=10;verticalAlign=top;spacingTop=8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="1200" width="700" height="120" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="aws2_08" name="AWS2-08 APIGateway+Lambda+DynamoDB">
+        <mxGraphModel dx="756" dy="413" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="80" value="AWS2-08: API Gateway + Lambda + DynamoDB 演習 — サーバーレスAPIバックエンド" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=22;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="20" width="1400" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="81" value="クライアント (Browser)" style="shape=mxgraph.aws4.user;fillColor=#232F3E;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="480" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="Amazon API Gateway&lt;br&gt;REST API&lt;br&gt;GET /items?pid=1001" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.api_gateway;fillColor=#8C4FFF;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="480" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="83" value="Lambda Function&lt;br&gt;(Python)&lt;br&gt;クエリパラメータ解析" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="480" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="84" value="DynamoDB Table&lt;br&gt;(菓子テーブル)&lt;br&gt;pid, name, price, image" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.dynamodb;fillColor=#2E73B8;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1200" y="480" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="85" value="HTTPS GET&lt;br&gt;?pid=1001" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#6c8ebf;strokeWidth=2;" parent="1" source="81" target="82" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="86" value="Invoke" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#8C4FFF;strokeWidth=2;" parent="1" source="82" target="83" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="87" value="Query/Scan" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#2E73B8;strokeWidth=2;" parent="1" source="83" target="84" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="88" value="JSON Response&lt;br&gt;{&quot;name&quot;:&quot;ケーキ&quot;,&quot;price&quot;:500}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="700" width="280" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="89" value="レスポンス" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#6c8ebf;strokeWidth=2;dashed=1;" parent="1" source="82" target="88" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="90" value="&lt;b&gt;演習08-1〜08-2 内容:&lt;/b&gt;&lt;br&gt;08-1: DynamoDB Tableに菓子データ作成&lt;br&gt;08-2: API GW → Lambda → DynamoDB 接続&lt;br&gt;　　　URL: https://xxxxx.execute-api.us-east-1.amazonaws.com/prod/items?pid=1001&lt;br&gt;　　　Lambda Python: boto3でDynamoDB.query()を実行してJSONを返す" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8ee;strokeColor=#d6b656;align=left;spacingLeft=8;fontSize=10;verticalAlign=top;spacingTop=8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="880" width="800" height="130" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="aws2_09" name="AWS2-09 ElasticBeanstalk">
+        <mxGraphModel dx="756" dy="413" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="100" value="AWS2-09: AWS Elastic Beanstalk 演習 — WordPress 自動デプロイ" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=22;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="20" width="1100" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="101" value="開発者&lt;br&gt;(コードをzip)" style="shape=mxgraph.aws4.user;fillColor=#232F3E;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="480" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="102" value="AWS Elastic Beanstalk&lt;br&gt;(PaaS)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.elastic_beanstalk;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="480" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="103" value="自動プロビジョニング" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE8F3;strokeColor=#E7157B;strokeWidth=2;dashed=1;fontSize=12;fontStyle=1;verticalAlign=top;spacingTop=10;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="200" width="900" height="720" as="geometry"/>
+                </mxCell>
+                <mxCell id="104" value="Application Load Balancer" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.elastic_load_balancing;fillColor=#8C4FFF;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="780" y="320" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="105" value="EC2&lt;br&gt;(WordPress)&lt;br&gt;PHP+Apache" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ec2;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1020" y="430" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="106" value="Amazon RDS&lt;br&gt;(MySQL)&lt;br&gt;WordPress DB" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.rds;fillColor=#2E73B8;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1300" y="430" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="107" value="エンドユーザー" style="shape=mxgraph.aws4.user;fillColor=#232F3E;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="280" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="108" value="zip upload" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E7157B;strokeWidth=2;" parent="1" source="101" target="102" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="109" value="自動構築" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E7157B;strokeWidth=2;dashed=1;" parent="1" source="102" target="104" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="110" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E7157B;strokeWidth=2;" parent="1" source="104" target="105" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="111" value="MySQL 3306" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#2E73B8;strokeWidth=2;" parent="1" source="105" target="106" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="112" value="WordPress閲覧" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#6c8ebf;strokeWidth=2;" parent="1" source="107" target="104" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="113" value="&lt;b&gt;ポイント:&lt;/b&gt; VPC/EC2/RDSを手動設定不要&lt;br&gt;zipファイルをアップロードするだけで環境構築完了" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8ee;strokeColor=#d6b656;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="900" width="600" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="aws2_111" name="AWS2-11-1 Aurora">
+        <mxGraphModel dx="2520" dy="1377" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="120" value="AWS2-11-1: Amazon Aurora 演習 — 高可用性分散データベース" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=22;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="20" width="1100" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="121" value="アプリケーション&lt;br&gt;サーバ (EC2)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ec2;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="120" y="480" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="122" value="Amazon Aurora Cluster (MySQL互換)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#2E73B8;strokeWidth=2;fontSize=13;fontStyle=1;verticalAlign=top;spacingTop=10;" parent="1" vertex="1">
+                    <mxGeometry x="420" y="200" width="1080" height="800" as="geometry"/>
+                </mxCell>
+                <mxCell id="123" value="Writer Endpoint&lt;br&gt;(書き込み専用)&lt;br&gt;cluster.xxx.amazonaws.com" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="460" y="320" width="280" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="124" value="Primary Instance&lt;br&gt;(Read/Write)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.aurora;fillColor=#2E73B8;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="560" y="530" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="125" value="Reader Endpoint&lt;br&gt;(読み取り専用)&lt;br&gt;cluster-ro.xxx.amazonaws.com" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="920" y="320" width="280" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="126" value="Read Replica&lt;br&gt;(Read Only)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.aurora;fillColor=#2E73B8;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1020" y="530" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="127" value="自動レプリケーション" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#2E73B8;strokeWidth=2;dashed=1;" parent="1" source="124" target="126" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="128" value="書き込み (INSERT/UPDATE)" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;strokeWidth=2;" parent="1" source="121" target="123" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="129" value="読み取り (SELECT)" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#82b366;strokeWidth=2;" parent="1" source="121" target="125" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="130" value="&lt;b&gt;演習内容:&lt;/b&gt;&lt;br&gt;① Aurora Cluster作成 (MySQL互換)&lt;br&gt;② Writer Endpointで接続 → INSERT確認&lt;br&gt;③ Reader Endpointで接続 → SELECT確認&lt;br&gt;④ 両エンドポイントで役割分担を体験" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8ee;strokeColor=#d6b656;align=left;spacingLeft=8;fontSize=10;verticalAlign=top;spacingTop=8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="870" width="500" height="140" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="aws2_112" name="AWS2-11-2 ECR+ECS Fargate">
+        <mxGraphModel dx="1080" dy="590" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="1654" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="140" value="AWS2-11-2: ECR + ECS (Fargate) 演習 — Dockerコンテナのビルド・デプロイ" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=22;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="20" width="1600" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="141" value="開発環境 (AWS Cloud9)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;dashed=1;fontSize=13;fontStyle=1;verticalAlign=top;spacingTop=10;opacity=40;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="200" width="680" height="700" as="geometry"/>
+                </mxCell>
+                <mxCell id="142" value="AWS Cloud9&lt;br&gt;(IDE環境)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloud9;fillColor=#C7131F;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="160" y="320" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="143" value="Dockerfile&lt;br&gt;(PHP Web App)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666;fontSize=10;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="330" width="180" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="144" value="Docker Image&lt;br&gt;(ビルド済み)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="160" y="560" width="180" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="145" value="Amazon ECR&lt;br&gt;(Container Registry)&lt;br&gt;イメージ保存" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ecr;fillColor=#C7131F;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="900" y="480" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="146" value="ECS Cluster (Fargate)" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_ecs;strokeColor=#E7157B;fillColor=none;dashed=1;verticalAlign=top;spacingTop=22;fontSize=13;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1200" y="300" width="1080" height="800" as="geometry"/>
+                </mxCell>
+                <mxCell id="147" value="Task Definition&lt;br&gt;(CPU/Memory/Image指定)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE8F3;strokeColor=#E7157B;fontSize=10;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1240" y="380" width="240" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="148" value="ECS Service&lt;br&gt;(desired: 2 tasks)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE8F3;strokeColor=#E7157B;fontSize=10;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1240" y="520" width="240" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="149" value="Fargate Task 1&lt;br&gt;(PHPコンテナ)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.fargate;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1700" y="450" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="150" value="Fargate Task 2&lt;br&gt;(PHPコンテナ)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.fargate;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1700" y="700" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="151" value="docker build" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;strokeWidth=2;" parent="1" source="142" target="144" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="152" value="docker push" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#C7131F;strokeWidth=2;" parent="1" source="144" target="145" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="153" value="image pull" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#C7131F;strokeWidth=2;dashed=1;" parent="1" source="145" target="149" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="154" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#C7131F;strokeWidth=2;dashed=1;" parent="1" source="145" target="150" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="155" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E7157B;strokeWidth=2;" parent="1" source="148" target="149" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="156" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E7157B;strokeWidth=2;" parent="1" source="148" target="150" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="aws2_14" name="AWS2-14 Rekognition">
+        <mxGraphModel dx="1512" dy="826" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="160" value="AWS2-14: Amazon Rekognition 演習 — AI画像解析" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=22;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="20" width="900" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="161" value="S3 Bucket&lt;br&gt;(入力画像保存)&lt;br&gt;jpg/png" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;fillColor=#3F8624;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="120" y="480" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="162" value="Lambda Function&lt;br&gt;(Python / boto3)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="500" y="480" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="163" value="S3 Event Trigger" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#3F8624;strokeWidth=2;" parent="1" source="161" target="162" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="164" value="Amazon Rekognition&lt;br&gt;(画像AI解析)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.rekognition;fillColor=#8C4FFF;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="900" y="480" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="165" value="API呼び出し" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#8C4FFF;strokeWidth=2;" parent="1" source="162" target="164" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="166" value="14-1: detect_labels()&lt;br&gt;物体・シーン検出" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="1100" y="300" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="167" value="14-2: recognize_celebrities()&lt;br&gt;著名人顔認識" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="1100" y="480" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="168" value="14-3: detect_text()&lt;br&gt;画像内テキスト抽出&lt;br&gt;compare_faces() 顔比較" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="1100" y="660" width="200" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="169" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#8C4FFF;strokeWidth=2;" parent="1" source="164" target="166" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="170" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#8C4FFF;strokeWidth=2;" parent="1" source="164" target="167" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="171" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#8C4FFF;strokeWidth=2;" parent="1" source="164" target="168" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="172" value="&lt;b&gt;演習14-1〜14-3 内容:&lt;/b&gt;&lt;br&gt;14-1: S3の画像に対してdetect_labels → ラベル一覧取得&lt;br&gt;14-2: recognize_celebrities → 著名人識別&lt;br&gt;14-3: detect_text + S3の2画像をcompare_faces → 類似度(%)取得" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8ee;strokeColor=#d6b656;align=left;spacingLeft=8;fontSize=10;verticalAlign=top;spacingTop=8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="880" width="700" height="130" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="aws2_15" name="AWS2-15 SageMaker">
+        <mxGraphModel dx="756" dy="413" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="180" value="AWS2-15: Amazon SageMaker 演習 — 機械学習 (ML) 環境" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=22;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="20" width="1000" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="181" value="Amazon SageMaker&lt;br&gt;(ML Platform)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sagemaker;fillColor=#8C4FFF;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="500" y="300" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="182" value="JupyterLab Notebook&lt;br&gt;(ブラウザ上でPython実行)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="420" y="480" width="280" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="183" value="① データロード&lt;br&gt;(S3 / CSV)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="840" y="280" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="184" value="② 前処理&lt;br&gt;(pandas / numpy)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="840" y="400" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="185" value="③ モデル訓練&lt;br&gt;(sklearn等)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="840" y="520" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="186" value="④ 予測・評価" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="840" y="640" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="187" value="S3 Bucket&lt;br&gt;(学習データ)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;fillColor=#3F8624;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="120" y="480" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="188" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#8C4FFF;strokeWidth=2;" parent="1" source="181" target="182" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="189" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#3F8624;strokeWidth=2;" parent="1" source="187" target="183" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="190" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#666;strokeWidth=1;" parent="1" source="183" target="184" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="191" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#666;strokeWidth=1;" parent="1" source="184" target="185" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="192" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#666;strokeWidth=1;" parent="1" source="185" target="186" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="193" value="&lt;b&gt;演習内容:&lt;/b&gt;&lt;br&gt;① SageMaker Notebook Instance起動&lt;br&gt;② JupyterLabでPythonコード実行&lt;br&gt;③ 基本的な予測アルゴリズムを体験" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8ee;strokeColor=#d6b656;align=left;spacingLeft=8;fontSize=10;verticalAlign=top;spacingTop=8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="880" width="500" height="120" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="aws2_r2" name="AWS2-復習課題2">
+        <mxGraphModel dx="2520" dy="1377" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="1654" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="200" value="AWS2-復習課題2: サーバーレス菓子販売システム (EC2 + API GW + Lambda + DynamoDB + S3)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=22;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="20" width="2000" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="201" value="エンドユーザー" style="shape=mxgraph.aws4.user;fillColor=#232F3E;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="680" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="202" value="Internet" style="shape=mxgraph.aws4.internet_alt2;fillColor=#8C4FFF;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="220" y="680" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="203" value="" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#6c8ebf;strokeWidth=2;" parent="1" source="201" target="202" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="204" value="EC2 Web Server&lt;br&gt;(HTML/PHP Frontend)&lt;br&gt;商品一覧ページ" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ec2;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="680" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="205" value="Amazon API Gateway&lt;br&gt;REST API&lt;br&gt;/products?pid=xxx" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.api_gateway;fillColor=#8C4FFF;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="920" y="680" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="206" value="Lambda Function&lt;br&gt;(Python)&lt;br&gt;商品データ取得" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1300" y="680" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="207" value="DynamoDB Table&lt;br&gt;(菓子テーブル)&lt;br&gt;pid, name, price" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.dynamodb;fillColor=#2E73B8;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1700" y="500" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="208" value="S3 Bucket&lt;br&gt;(商品画像)&lt;br&gt;cake01.jpg etc." style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;fillColor=#3F8624;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1700" y="900" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="209" value="CloudWatch&lt;br&gt;(監視)" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudwatch;fillColor=#E7157B;strokeColor=#ffffff;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1700" y="200" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="210" value="HTTP" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#6c8ebf;strokeWidth=2;" parent="1" source="202" target="204" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="211" value="AJAX/Fetch API" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#8C4FFF;strokeWidth=2;" parent="1" source="204" target="205" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="212" value="Invoke" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#8C4FFF;strokeWidth=2;" parent="1" source="205" target="206" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="213" value="Query" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#2E73B8;strokeWidth=2;" parent="1" source="206" target="207" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="214" value="画像URL返却" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#3F8624;strokeWidth=2;dashed=1;" parent="1" source="206" target="208" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="215" value="メトリクス" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#E7157B;strokeWidth=2;dashed=1;" parent="1" source="206" target="209" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="216" value="JSON {name, price, imageUrl}&lt;br&gt;→ HTMLレンダリング" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="900" width="340" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="217" value="レスポンス" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#82b366;strokeWidth=2;dashed=1;" parent="1" source="205" target="216" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="218" value="&lt;b&gt;復習課題2 システム構成:&lt;/b&gt;&lt;br&gt;• EC2: Webフロントエンド (HTML/PHPで商品一覧表示)&lt;br&gt;• API Gateway: RESTful APIエンドポイント&lt;br&gt;• Lambda (Python): DynamoDBクエリ → JSON返却&lt;br&gt;• DynamoDB: 商品マスターテーブル (pid/name/price)&lt;br&gt;• S3: 商品画像のストレージ (Public URL)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8ee;strokeColor=#d6b656;align=left;spacingLeft=8;fontSize=10;verticalAlign=top;spacingTop=8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="1300" width="800" height="160" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

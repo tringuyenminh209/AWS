@@ -1,0 +1,101 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS1-02 VPC演習　―　仮想ネットワーク構築'
+
+Parameter:
+  LabName:
+    Type: String
+    AllowedValues: [sk3a, sk3a22]
+    Default: 'sk3a22'
+
+  KeyName:
+    Description: 'SSH接続用のEC2キーペア'
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: 'EC2キーペアが必要です'
+
+  InstanceType:
+    Description: 'EC2インスタンスタイプ'
+    Type: String
+    Default: t3.micro
+    AllowedValues:
+      - t3.micro
+      - t2.micro
+    ConstraintDescription: '有効なEC2インスタンスタイプを選んでください'
+
+  AMI:
+    Description: 'Amazon Linux 2023 AMI'
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/al2023-ami-minimal-kernel-default-x86_64'
+
+Resources:
+  # ----------------------------------------------------------------- #
+  # 1. VPC & Internet Gateway
+  # ----------------------------------------------------------------- #
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.1.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${LabName}-vpc"
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub "${LabName}-igw"
+
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+
+  # ----------------------------------------------------------------- #
+  # 2. Subnets
+  # ----------------------------------------------------------------- #
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.1.10.0/24
+      AvailabilityZone: !Select [0, !GetAZs '']
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${LabName}-pub"
+    
+  PrivateSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.1.11.0/24
+      AvailabilityZone: !Select [1, !GetAZs '']
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub "${LabName}-priv"
+
+  # ------------------------------------------------------------#
+  # 3. NAT Gateway
+  # ------------------------------------------------------------#
+  NatEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+
+  NatGateway:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt NatEIP.AllocationId
+      SubnetId: !Ref PublicSubnet
+      Tags:
+        - Key: Name
+          Value: !Sub "${LabName}-nat-gw"
+  
+  # ------------------------------------------------------------#
+  # 4. Route Tables & Routes
+  # ------------------------------------------------------------#
+  

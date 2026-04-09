@@ -1,0 +1,98 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: AWS1-01-EC2 Basic CloudFormation Template
+
+Parameters:
+  LabName:
+    Type: String
+    AllowedValues:
+      - sk2a22
+      - sk2a
+    Default: sk2a22
+
+  KeyName:
+    Description: SSH接続用の既存EC2キーペア名
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: 既存のEC2キーペア名である必要がある
+
+  InstanceType:
+    Description: EC2インスタンスタイプ
+    Type: String
+    Default: t3.micro
+    AllowedValues:
+      - t2.micro
+      - t3.micro
+    ConstraintDescription: 有効なEC2インスタンスタイプを選んでください
+
+  AMI:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/al2023-ami-minimal-kernel-default-x86_64
+    Description: Amazon Linux 2023 AMI.
+
+  SubnetId:
+    Type: AWS::EC2::Subnet::Id
+    Description: VPC内のサブネットID
+
+Resources:
+  WebInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+
+  WebInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref WebInstanceRole
+
+  WebSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow SSH access on port 22 from anywhere
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: !Sub ${LabName}-sg
+
+  WebServerInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref AMI
+      KeyName: !Ref KeyName
+      IamInstanceProfile: !Ref WebInstanceProfile
+      SubnetId: !Ref SubnetId
+      SecurityGroupIds:
+        - !Ref WebSecurityGroup
+      Tags:
+        - Key: Name
+          Value: !Sub ${LabName}-ec2
+  ApiGatewayManagedOverrides:
+    Type: AWS::ApiGatewayV2::ApiGatewayManagedOverrides
+    Properties:
+      ApiId: <String>
+
+Outputs:
+  # 4. Public IP Confirmation
+  InstanceId:
+    Description: The Instance ID of the Web Server
+    Value: !Ref WebServerInstance
+  InstancePublicIP:
+    Description: Public IP address of the newly created EC2 instance
+    Value: !GetAtt WebServerInstance.PublicIp
+  InstancePublicDNS:
+    Description: Public DNS string of the EC2 instance
+    Value: !GetAtt WebServerInstance.PublicDnsName

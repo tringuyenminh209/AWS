@@ -1,0 +1,120 @@
+<mxfile host="65bd71144e">
+    <diagram id="diagram_vpc_arch" name="VPC演習 - AWS構成">
+        <mxGraphModel dx="760" dy="784" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="1654" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="internet" value="Internet" style="shape=cloud;html=1;whiteSpace=wrap;fontSize=14;fontStyle=1;fillColor=#f5f5f5;strokeColor=#6c8ebf;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="60" width="140" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="aws_cloud" value="AWS Cloud - ap-northeast-1 (Tokyo)" style="shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_aws_cloud_alt;strokeColor=#232F3E;fillColor=none;strokeWidth=2;verticalAlign=top;align=left;spacingLeft=30;spacingTop=22;fontSize=13;fontStyle=1;fontColor=#232F3E;" parent="1" vertex="1">
+                    <mxGeometry x="1060" y="450" width="2059" height="1574" as="geometry"/>
+                </mxCell>
+                <mxCell id="vpc" value="VPC (10.0.0.0/16)" style="shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_vpc;strokeColor=#8C4FFF;fillColor=none;strokeWidth=2;verticalAlign=top;align=left;spacingLeft=30;spacingTop=22;fontSize=13;fontStyle=1;fontColor=#8C4FFF;" parent="aws_cloud" vertex="1">
+                    <mxGeometry x="40" y="70" width="1970" height="1480" as="geometry"/>
+                </mxCell>
+                <mxCell id="igw" value="Internet Gateway" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.internet_gateway;fillColor=#8C4FFF;strokeColor=#ffffff;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;labelPosition=center;" parent="vpc" vertex="1">
+                    <mxGeometry x="955" y="30" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="az_a" value="ap-northeast-1a" style="shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_availability_zone;strokeColor=#147EBA;fillColor=none;dashed=1;strokeWidth=1;verticalAlign=top;align=left;spacingLeft=30;spacingTop=22;fontSize=12;fontStyle=1;fontColor=#147EBA;" parent="vpc" vertex="1">
+                    <mxGeometry x="40" y="140" width="900" height="660" as="geometry"/>
+                </mxCell>
+                <mxCell id="pub_subnet_a" value="Public Subnet&#10;10.0.1.0/24" style="shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_public_subnet;strokeColor=#007CBC;fillColor=#E6F3FB;opacity=30;verticalAlign=top;align=left;spacingLeft=30;spacingTop=22;fontSize=11;fontStyle=1;fontColor=#007CBC;" parent="az_a" vertex="1">
+                    <mxGeometry x="40" y="60" width="820" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="ec2_bastion" value="EC2 (Bastion/Web)&#10;t2.micro" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ec2;fillColor=#E7157B;strokeColor=#ffffff;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;labelPosition=center;" parent="pub_subnet_a" vertex="1">
+                    <mxGeometry x="200" y="110" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="nat_gw" value="NAT Gateway" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.nat_gateway;fillColor=#8C4FFF;strokeColor=#ffffff;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;labelPosition=center;" parent="pub_subnet_a" vertex="1">
+                    <mxGeometry x="560" y="110" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="priv_subnet_a" value="Private Subnet&#10;10.0.11.0/24" style="shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_private_subnet;strokeColor=#147EBA;fillColor=#E0F0FA;opacity=30;verticalAlign=top;align=left;spacingLeft=30;spacingTop=22;fontSize=11;fontStyle=1;fontColor=#147EBA;" parent="az_a" vertex="1">
+                    <mxGeometry x="40" y="360" width="820" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="ec2_app_a" value="EC2 (App)&#10;t2.micro" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ec2;fillColor=#E7157B;strokeColor=#ffffff;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;labelPosition=center;" parent="priv_subnet_a" vertex="1">
+                    <mxGeometry x="380" y="110" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="az_c" value="ap-northeast-1c" style="shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_availability_zone;strokeColor=#147EBA;fillColor=none;dashed=1;strokeWidth=1;verticalAlign=top;align=left;spacingLeft=30;spacingTop=22;fontSize=12;fontStyle=1;fontColor=#147EBA;" parent="vpc" vertex="1">
+                    <mxGeometry x="1000" y="140" width="940" height="660" as="geometry"/>
+                </mxCell>
+                <mxCell id="pub_subnet_c" value="Public Subnet&#10;10.0.2.0/24" style="shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_public_subnet;strokeColor=#007CBC;fillColor=#E6F3FB;opacity=30;verticalAlign=top;align=left;spacingLeft=30;spacingTop=22;fontSize=11;fontStyle=1;fontColor=#007CBC;" parent="az_c" vertex="1">
+                    <mxGeometry x="40" y="60" width="860" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="ec2_web_c" value="EC2 (Web)&#10;t2.micro" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.ec2;fillColor=#E7157B;strokeColor=#ffffff;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;labelPosition=center;" parent="pub_subnet_c" vertex="1">
+                    <mxGeometry x="400" y="110" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="priv_subnet_c" value="Private Subnet&#10;10.0.12.0/24" style="shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_private_subnet;strokeColor=#147EBA;fillColor=#E0F0FA;opacity=30;verticalAlign=top;align=left;spacingLeft=30;spacingTop=22;fontSize=11;fontStyle=1;fontColor=#147EBA;" parent="az_c" vertex="1">
+                    <mxGeometry x="40" y="360" width="860" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="rds" value="Amazon RDS&#10;MySQL db.t3.micro" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.rds;fillColor=#2E73B8;strokeColor=#ffffff;verticalLabelPosition=bottom;verticalAlign=top;fontSize=11;fontStyle=1;labelPosition=center;" parent="priv_subnet_c" vertex="1">
+                    <mxGeometry x="400" y="110" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="rt_public" value="&lt;b&gt;Public RT&lt;/b&gt;&#10;0.0.0.0/0 → IGW" style="text;html=1;strokeColor=#007CBC;fillColor=#E6F3FB;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;spacing=5;" parent="vpc" vertex="1">
+                    <mxGeometry x="40" y="1400" width="180" height="46" as="geometry"/>
+                </mxCell>
+                <mxCell id="rt_private" value="&lt;b&gt;Private RT&lt;/b&gt;&#10;0.0.0.0/0 → NAT GW" style="text;html=1;strokeColor=#147EBA;fillColor=#E0F0FA;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;spacing=5;" parent="vpc" vertex="1">
+                    <mxGeometry x="240" y="1400" width="180" height="46" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge_internet_igw" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeWidth=2;strokeColor=#6c8ebf;" parent="1" source="internet" target="igw" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge_igw_pub_a" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeWidth=2;strokeColor=#007CBC;dashed=1;" parent="1" source="igw" target="pub_subnet_a" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge_igw_pub_c" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeWidth=2;strokeColor=#007CBC;dashed=1;" parent="1" source="igw" target="pub_subnet_c" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge_nat_priv" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeWidth=2;strokeColor=#147EBA;dashed=1;" parent="1" source="nat_gw" target="priv_subnet_a" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge_bastion_app" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeWidth=2;strokeColor=#E7157B;dashed=1;" parent="1" source="ec2_bastion" target="ec2_app_a" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge_ec2_rds" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeWidth=2;strokeColor=#2E73B8;" parent="1" source="ec2_app_a" target="rds" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="diagram_notes" name="Notes - 構成説明">
+        <mxGraphModel dx="760" dy="784" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="1654" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="VPC演習 - 構成要素の説明" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=22;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="40" width="600" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="note_vpc" value="&lt;b&gt;VPC (10.0.0.0/16)&lt;/b&gt;&#10;AWS内の仮想プライベートネットワーク。演習では東京リージョン(ap-northeast-1)に1つのVPCを構築。CIDR 10.0.0.0/16で約65,000のIPアドレスを確保。" style="text;html=1;strokeColor=#8C4FFF;fillColor=#F5F0FF;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;spacing=8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="120" width="500" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="note_igw" value="&lt;b&gt;Internet Gateway (IGW)&lt;/b&gt;&#10;VPCとインターネット間の双方向通信を可能にする。パブリックサブネットのルートテーブルで0.0.0.0/0をIGWに設定。" style="text;html=1;strokeColor=#8C4FFF;fillColor=#F5F0FF;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;spacing=8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="210" width="500" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="note_nat" value="&lt;b&gt;NAT Gateway&lt;/b&gt;&#10;プライベートサブネットからインターネットへのアウトバウンド通信を許可（例：yum update、外部API）。パブリックサブネットに配置し、Private RTで0.0.0.0/0をNAT GWに設定。" style="text;html=1;strokeColor=#8C4FFF;fillColor=#F5F0FF;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;spacing=8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="290" width="500" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="note_pub" value="&lt;b&gt;Public Subnet&lt;/b&gt;&#10;10.0.1.0/24 (1a), 10.0.2.0/24 (1c)。IGWへのルートを持つ。Web/Bastion EC2、NAT Gatewayを配置。直接インターネットからアクセス可能。" style="text;html=1;strokeColor=#007CBC;fillColor=#E6F3FB;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;spacing=8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="380" width="500" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="note_priv" value="&lt;b&gt;Private Subnet&lt;/b&gt;&#10;10.0.11.0/24 (1a), 10.0.12.0/24 (1c)。NAT GW経由でのみインターネット接続。App EC2、RDSを配置しセキュリティを強化。" style="text;html=1;strokeColor=#147EBA;fillColor=#E0F0FA;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;spacing=8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="470" width="500" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="note_ec2" value="&lt;b&gt;EC2&lt;/b&gt;&#10;Bastion/Web: SSH踏み台・Web公開。App: アプリケーションサーバー（RDS接続）。t2.microでコスト最適化。" style="text;html=1;strokeColor=#E7157B;fillColor=#FCE8F3;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;spacing=8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="560" width="500" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="note_rds" value="&lt;b&gt;Amazon RDS (MySQL)&lt;/b&gt;&#10;プライベートサブネットに配置。EC2からのみTCP 3306で接続。db.t3.microで開発・演習向け。" style="text;html=1;strokeColor=#2E73B8;fillColor=#E8F2FC;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;spacing=8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="640" width="500" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="note_rt" value="&lt;b&gt;ルートテーブル (RT)&lt;/b&gt;&#10;Public RT: 0.0.0.0/0 → IGW。Private RT: 0.0.0.0/0 → NAT GW。各サブネットに適切なRTを関連付け。" style="text;html=1;strokeColor=#147EBA;fillColor=#E0F0FA;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;spacing=8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="720" width="500" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="note_sg" value="&lt;b&gt;セキュリティグループ (SG)&lt;/b&gt;&#10;Bastion: SSH(22) from 0.0.0.0/0。App: SSH from Bastion SG, 3306 from App SG。RDS: 3306 from App SG。最小権限の原則で設定。" style="text;html=1;strokeColor=#DD344C;fillColor=#FCE8E8;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;spacing=8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="800" width="500" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="note_flow" value="&lt;b&gt;トラフィックフロー&lt;/b&gt;&#10;① Internet → IGW → Public Subnet (Web/Bastion)&#10;② Bastion → SSH → Private Subnet (App)&#10;③ App/Web EC2 → RDS (MySQL 3306)&#10;④ Private Subnet → NAT GW → IGW → Internet (outbound)" style="text;html=1;strokeColor=#6c8ebf;fillColor=#E8F4FC;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;spacing=8;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="890" width="500" height="90" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

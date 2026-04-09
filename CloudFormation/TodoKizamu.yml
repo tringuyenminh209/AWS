@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: ""
+
+Parameters:
+  LabName:
+    Type: String
+    Default: "todo-kizamu"
+    Description: ""
+
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: "EC2 key pair for SSH access."
+
+  AMI:
+    Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>"
+    Default: "/aws/service/ami-amazon-linux-latest/al2023-ami-minimal-kernel-default-x86_64"
+    Description: "Amazon Linux 2023 AMI."
+
+Resources:
+  #VPC
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.1.0.0/16
+      Tags:
+        - Key: Name
+          Value: !Sub "${LabName}_vpc"

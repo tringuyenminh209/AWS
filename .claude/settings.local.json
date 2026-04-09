@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__notebooklm__ask_question",
+      "WebSearch",
+      "WebFetch(domain:notebooklm.google.com)",
+      "mcp__notebooklm__reset_session"
+    ]
+  }
+}

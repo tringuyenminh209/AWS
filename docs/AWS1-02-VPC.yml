@@ -1,0 +1,173 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS1-02 VPC 演習 - 仮想ネットワーク構築 (VPC、サブネット、IGW、NAT GW、ルートテーブル、セキュリティグループ)'
+
+Resources:
+  # ------------------------------------------------------------#
+  # 1. VPC & Internet Gateway
+  # ------------------------------------------------------------#
+  MyVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.1.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: AWS1-02-VPC
+
+  MyInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: AWS1-02-IGW
+
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref MyVPC
+      InternetGatewayId: !Ref MyInternetGateway
+
+  # ------------------------------------------------------------#
+  # 2. Subnets
+  # ------------------------------------------------------------#
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: 10.1.10.0/24
+      AvailabilityZone: !Select [0, !GetAZs '']  # e.g., us-east-1a
+      MapPublicIpOnLaunch: true                  # Auto-assign Public IP: ON
+      Tags:
+        - Key: Name
+          Value: AWS1-02-Public-Subnet-1a
+
+  PrivateSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: 10.1.11.0/24
+      AvailabilityZone: !Select [1, !GetAZs '']  # e.g., us-east-1b
+      MapPublicIpOnLaunch: false                 # Auto-assign Public IP: OFF
+      Tags:
+        - Key: Name
+          Value: AWS1-02-Private-Subnet-1b
+
+  # ------------------------------------------------------------#
+  # 3. NAT Gateway
+  # ------------------------------------------------------------#
+  NatEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+
+  NatGateway:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt NatEIP.AllocationId
+      SubnetId: !Ref PublicSubnet
+      Tags:
+        - Key: Name
+          Value: AWS1-02-NAT-GW
+
+  # ------------------------------------------------------------#
+  # 4. Route Tables & Routes
+  # ------------------------------------------------------------#
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref MyVPC
+      Tags:
+        - Key: Name
+          Value: AWS1-02-Public-RT
+
+  PublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: AttachGateway
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref MyInternetGateway
+
+  PublicSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet
+      RouteTableId: !Ref PublicRouteTable
+
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref MyVPC
+      Tags:
+        - Key: Name
+          Value: AWS1-02-Private-RT
+
+  PrivateRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NatGateway
+
+  PrivateSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet
+      RouteTableId: !Ref PrivateRouteTable
+
+  # ------------------------------------------------------------#
+  # 5. Security Groups
+  # ------------------------------------------------------------#
+  WebSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: WebサーバーへのHTTP/HTTPSおよびSSHアクセスを許可する
+      VpcId: !Ref MyVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: AWS1-02-Web-SG
+
+  DBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: WebサーバーからのMariaDBアクセスを許可する
+      VpcId: !Ref MyVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          SourceSecurityGroupId: !Ref WebSecurityGroup
+      Tags:
+        - Key: Name
+          Value: AWS1-02-DB-SG
+
+Outputs:
+  VpcId:
+    Description: VPC ID
+    Value: !Ref MyVPC
+  PublicSubnetId:
+    Description: パブリックサブネット ID
+    Value: !Ref PublicSubnet
+  PrivateSubnetId:
+    Description: プライベートサブネット ID
+    Value: !Ref PrivateSubnet
+  WebSecurityGroupId:
+    Description: Webサーバーのセキュリティグループ ID
+    Value: !Ref WebSecurityGroup
+  DBSecurityGroupId:
+    Description: データベースのセキュリティグループ ID
+    Value: !Ref DBSecurityGroup
