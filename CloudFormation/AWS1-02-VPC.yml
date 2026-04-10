@@ -1,30 +1,32 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'AWS1-02 VPC演習　―　仮想ネットワーク構築'
+Description: AWS1-02 VPC演習　―　仮想ネットワーク構築
 
-Parameter:
+Parameters:
   LabName:
     Type: String
-    AllowedValues: [sk3a, sk3a22]
-    Default: 'sk3a22'
+    AllowedValues:
+      - sk3a
+      - sk3a22
+    Default: sk3a22
 
   KeyName:
-    Description: 'SSH接続用のEC2キーペア'
+    Description: SSH接続用のEC2キーペア
     Type: AWS::EC2::KeyPair::KeyName
-    ConstraintDescription: 'EC2キーペアが必要です'
+    ConstraintDescription: EC2キーペアが必要です
 
   InstanceType:
-    Description: 'EC2インスタンスタイプ'
+    Description: EC2インスタンスタイプ
     Type: String
     Default: t3.micro
     AllowedValues:
       - t3.micro
       - t2.micro
-    ConstraintDescription: '有効なEC2インスタンスタイプを選んでください'
+    ConstraintDescription: 有効なEC2インスタンスタイプを選んでください
 
   AMI:
-    Description: 'Amazon Linux 2023 AMI'
-    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
-    Default: '/aws/service/ami-amazon-linux-latest/al2023-ami-minimal-kernel-default-x86_64'
+    Description: Amazon Linux 2023 AMI
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/al2023-ami-minimal-kernel-default-x86_64
 
 Resources:
   # ----------------------------------------------------------------- #
@@ -38,14 +40,14 @@ Resources:
       EnableDnsHostnames: true
       Tags:
         - Key: Name
-          Value: !Sub "${LabName}-vpc"
+          Value: !Sub ${LabName}-vpc
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
         - Key: Name
-          Value: !Sub "${LabName}-igw"
+          Value: !Sub ${LabName}-igw
 
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
@@ -61,22 +63,26 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: 10.1.10.0/24
-      AvailabilityZone: !Select [0, !GetAZs '']
+      AvailabilityZone: !Select
+        - 0
+        - !GetAZs ''
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: !Sub "${LabName}-pub"
-    
+          Value: !Sub ${LabName}-pub
+
   PrivateSubnet:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
       CidrBlock: 10.1.11.0/24
-      AvailabilityZone: !Select [1, !GetAZs '']
+      AvailabilityZone: !Select
+        - 1
+        - !GetAZs ''
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
-          Value: !Sub "${LabName}-priv"
+          Value: !Sub ${LabName}-priv
 
   # ------------------------------------------------------------#
   # 3. NAT Gateway
@@ -93,9 +99,7 @@ Resources:
       SubnetId: !Ref PublicSubnet
       Tags:
         - Key: Name
-          Value: !Sub "${LabName}-nat-gw"
-  
+          Value: !Sub ${LabName}-nat-gw
   # ------------------------------------------------------------#
   # 4. Route Tables & Routes
   # ------------------------------------------------------------#
-  
